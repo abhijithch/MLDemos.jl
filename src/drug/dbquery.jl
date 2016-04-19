@@ -1,6 +1,7 @@
-function dbsearch(db::ASCIIString, terms::Array{UTF8String, 1}; rm=10)
+function dbsearch(db::ASCIIString, terms::Array{UTF8String, 1}, condition::ASCIIString; rm=10)
+    println("OK")
     src="http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
-    search_query = form_query(terms)
+    search_query = form_query(terms, condition)
     resp = get(src; query = Dict("db"=>db, "term"=>search_query, "retmax"=>rm))
     doc = LightXML.parse_string(bytestring(resp.data))
     p = PubIds()
@@ -11,8 +12,8 @@ function dbsearch(db::ASCIIString, terms::Array{UTF8String, 1}; rm=10)
     return p
 end
 
-function form_query(terms::Array{UTF8String, 1})
-    field = "[Title/Abstract] OR"
+function form_query(terms::Array{UTF8String, 1}, condition::ASCIIString)
+    field = "[Title/Abstract] $(condition)"
     query = ""
     for term in terms
         query = "$(query) $(term) $(field)"
@@ -36,3 +37,20 @@ function nhits(pubids::Array{Int64, 1})
     return length(pubids)
 end
 
+function tdm(terms::Array{UTF8String, 1}, db::ASCIIString)
+    allterms = dbsearch(db, terms, "OR"; rm = 1000000)
+    d = 0
+    nterms = length(terms)
+    ndocs = maximum(allterms.pubids.value)
+    println("Total number of documents : $(ndocs)")
+    T = spzeros(nterms, ndocs)
+    for term in terms
+        d = d+1
+        docids = dbsearch(db, [term], "AND")
+        if !docids.pubids.isnull
+            docs = docids.pubids.value
+            T[d,docs]=1
+        end
+    end
+    return T
+end

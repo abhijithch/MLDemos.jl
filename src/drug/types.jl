@@ -16,9 +16,23 @@ end
 type PubIds
     terms::Nullable{Array{UTF8String, 1}}
     pubids::Nullable{Array{Int64, 1}}
-    npubids::Nullable{Int64}
+    npubids::Int64
 
     function PubIds()
-        new(nothing, nothing, nothing)
+        new(nothing, nothing, 0)
     end
 end
+
+type TermDocMatrix
+    nterms::Int64
+    terms::Array{UTF8String, 1}
+    ndocs::Int64
+    tdm::SparseMatrixCSC
+
+    function TermDocMatrix(terms, ndocs)
+        nterms = length(terms)
+        tdm = spzeros(nterms, ndocs)
+        new(nterms, terms, ndocs, tdm)
+    end
+end
+

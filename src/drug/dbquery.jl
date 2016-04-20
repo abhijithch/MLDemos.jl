@@ -54,3 +54,13 @@ function tdm(terms::Array{UTF8String, 1}, db::ASCIIString)
     end
     return T
 end
+
+function docs(term::ASCIIString, T::TermDocMatrix)
+    ind = find(map(x->x==term), T.terms)
+    return find(T.tdm[ind, :])
+end
+
+function tfidf(T::TermDocMatrix)
+    return T .* log(size(T,2)./sum(T,2))
+end
+

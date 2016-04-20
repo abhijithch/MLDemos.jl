@@ -29,10 +29,9 @@ type TermDocMatrix
     ndocs::Int64
     tdm::SparseMatrixCSC
 
-    function TermDocMatrix(terms, ndocs)
+    function TermDocMatrix(terms::Array{UTF8String, 1}, ndocs::Int)
         nterms = length(terms)
         tdm = spzeros(nterms, ndocs)
         new(nterms, terms, ndocs, tdm)
     end
 end
-

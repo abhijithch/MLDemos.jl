@@ -1,13 +1,13 @@
 module Entrez
 
 using LightXML, DataFrames, URIParser
+include("types.jl")
+
+#types
+export EntrezSearchResult, PubIds, TermDocMatrix
 
 # functions
 export dbsearch, tdm
 
-#types
-export EntrezSearchResult, PubIDs, TermDocMatrix
-
-include("types.jl")
 include("dbquery.jl")
 end

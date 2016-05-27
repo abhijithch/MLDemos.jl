@@ -2,7 +2,7 @@ module MLDemos
 
 using LightXML, DataFrames, URIParser, Requests
 import Requests: get, options
-
+include("$(Pkg.dir())/MLDemos/src/drug/types.jl")
 # functions
 export dbsearch, tdm
 
@@ -10,6 +10,6 @@ export dbsearch, tdm
 export EntrezSearchResult, PubIds, TermDocMatrix
 
 include("$(Pkg.dir())/MLDemos/src/drug/dbquery.jl")
-include("$(Pkg.dir())/MLDemos/src/drug/types.jl")
+
 
 end # module

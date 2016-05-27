@@ -8,7 +8,7 @@ using DataFrames
 #The images in the trainResized and testResized data files
 #are 20x20 pixels, so imageSize is set to 400.
 #path should be set to the llabelsInfoTrain = readtable("$(path)/trainLabels.csv")ocation of the data files.
-function read_data(typeData, labelsInfo, imageSize, path)
+function read_data_sv(typeData, labelsInfo, imageSize, path)
     x = zeros(size(labelsInfo, 1), imageSize)
     for (index, idImage) in enumerate(labelsInfo[:ID])
         nameFile = "$(path)/$(typeData)Resized/$(idImage).Bmp"
@@ -130,4 +130,3 @@ end
  end
  return mostPopularLabel
 end
-

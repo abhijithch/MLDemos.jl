@@ -13,7 +13,8 @@ function read_data_sv(typeData, labelsInfo, imageSize, path)
     for (index, idImage) in enumerate(labelsInfo[:ID])
         nameFile = "$(path)/$(typeData)Resized/$(idImage).Bmp"
         #println(idImage)
-        img = imread(nameFile)
+        #img = imread(nameFile)
+        img = load(nameFile)
         imgg = convert(Image{Gray}, img)
         temp = float(imgg.data)
         x[index, :] = reshape(temp, 1, imageSize)
@@ -21,12 +22,24 @@ function read_data_sv(typeData, labelsInfo, imageSize, path)
     return x
 end
 
-@everywhere function euclidean_distance(a, b)
- distance = 0.0 
- for index in 1:size(a, 1) 
-  distance += (a[index]-b[index]) * (a[index]-b[index])
+function showimtrain(image::Int64)
+    testimage(joinpath("$(path)/data/characters/trainResized/$image.Bmp"))
+end
+
+function showimtest(image::Int64)
+    testimage(joinpath("$(path)/data/characters/testResized/$image.Bmp"))
+end
+
+@everywhere function euclidean_distance(a, b, flag::Bool)
+ if flag
+  distance = 0.0 
+  for index in 1:size(a, 1) 
+   distance += (a[index]-b[index]) * (a[index]-b[index])
+  end
+  return distance
+ else
+  return dot(a-b, a-b)
  end
- return distance
 end
 
 @everywhere function get_k_nearest_neighbors(x, i, k)
@@ -41,7 +54,7 @@ end
   for index in 1:nRows
    imageJ[index] = x[index, j]
   end
-  distances[j] = euclidean_distance(imageI, imageJ)
+  distances[j] = euclidean_distance(imageI, imageJ, flag)
  end
  sortedNeighbors = sortperm(distances)
  kNearestNeighbors = sortedNeighbors[2:k+1]
@@ -105,7 +118,7 @@ end
   for index in 1:nRows
    imageJ[index] = xTrain[index, j]
   end
-  distances[j] = euclidean_distance(imageI, imageJ)
+  distances[j] = euclidean_distance(imageI, imageJ, flag)
  end
  sortedNeighbors = sortperm(distances)
  kNearestNeighbors = sortedNeighbors[1:k]

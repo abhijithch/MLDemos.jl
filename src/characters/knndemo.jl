@@ -12,7 +12,7 @@ function read_data_sv(typeData, labelsInfo, imageSize, path)
     x = zeros(size(labelsInfo, 1), imageSize)
     for (index, idImage) in enumerate(labelsInfo[:ID])
         nameFile = "$(path)/$(typeData)Resized/$(idImage).Bmp"
-        println(idImage)
+        #println(idImage)
         img = imread(nameFile)
         imgg = convert(Image{Gray}, img)
         temp = float(imgg.data)

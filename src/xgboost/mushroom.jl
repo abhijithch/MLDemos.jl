@@ -13,7 +13,7 @@ function readlibsvm(fname::UTF8String, shape)
         line = line[2:end]
         for itm in line
             itm = split(itm, ":")
-            dmx[cnt, int(itm[1]) + 1] = float(int(itm[2]))
+            dmx[cnt, int(itm[1]) + 1] = float(parse(Int,itm[2]))
         end
         cnt += 1
     end
